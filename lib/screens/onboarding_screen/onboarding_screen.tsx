@@ -1,0 +1,252 @@
+import React, { useRef, useState } from 'react';
+import { Dimensions, Image, StyleSheet, View, Text, ImageSourcePropType, FlatList, Animated, Pressable, TouchableOpacity } from 'react-native';
+import { fontFamilies } from '../../font';
+import { transformer } from '../../../metro.config';
+import { onboardingScreenViewModel } from '../../view_models/onboarding_screen/onboarding_screen_view_model';
+
+const { width, height } = Dimensions.get("window")
+
+type OnboardingProps = {
+    navigation: any
+}
+
+const data: ImageSourcePropType[] = [
+    require("../../../assets/onboarding_first.png"),
+    require("../../../assets/onboarding_second.png"),
+    require("../../../assets/onboarding_third.png")
+]
+
+const buttonData: string[] = [
+    "Let's Go",
+    "Next",
+    "Next",
+]
+
+type ContentData = {
+    title: string,
+    content: string
+}
+
+
+
+const contentData: ContentData[] = [
+    { title: "Hello!", content: "Let's Cook!" },
+    { title: "Create!", content: "Your own Recipes!" },
+    { title: "Challenge!", content: "Win and get gifts!" },
+]
+
+
+const OnboardingScreen: React.FC<OnboardingProps> = ({ navigation }) => {
+
+
+    const [pageIndex, setIndex] = useState(0)
+
+    // const [activeIndex, setActiveIndex] = useState(0);
+    const scrollX = new Animated.Value(0);
+
+    // Handle flatlist scroll
+    const onScroll = Animated.event(
+        [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+        { useNativeDriver: false }
+    );
+
+    // Calculate page indicator position based on scroll position
+    const indicatorWidth = scrollX.interpolate({
+        inputRange: [0, 1],
+        outputRange: [0, 1], // Define the range here (if needed for custom size)
+        extrapolate: 'clamp',
+    });
+
+
+    const wormIndicator = scrollX.interpolate({
+        inputRange: [0, width, width * 2],
+        outputRange: [0, 100, 200], // Worm effect translation
+        extrapolate: 'clamp',
+    });
+    // Render page dots
+    const RenderDots = () => {
+        return (
+            <View style={styles.indicatorContainer}>
+                {data.map((_, index) => {
+                    const dotStyle = index === pageIndex
+                        ? { ...styles.dot, backgroundColor: 'white', width: 20 }
+                        : { ...styles.dot, backgroundColor: '#FEE8CC' };
+                    return <View key={index} style={dotStyle} />
+                })}
+            </View>
+        );
+    };
+    // Render FlatList Items (images)
+
+    return (
+        <View style={styles.stackLayer}>
+            <RenderDots />
+            <View style={{ height: 16 }} />
+            <OnboardingPageView imageData={data}
+                onScroll={onScroll}
+                setActiveIndex={setIndex}
+                navigation={navigation}
+            />
+        </View >
+    );
+}
+
+type ImagePageViewProp = {
+    imageData: ImageSourcePropType[]
+    onScroll: (...args: any[]) => void
+    setActiveIndex: (index: number) => void
+    navigation: any
+}
+
+const OnboardingPageView: React.FC<ImagePageViewProp> = (prop) => {
+    const ref = useRef<FlatList>(null)
+    return (
+        <View>
+            <FlatList
+                data={prop.imageData}
+                horizontal
+                pagingEnabled
+                ref={ref}
+                showsHorizontalScrollIndicator={false}
+                renderItem={({ item }) => {
+                    let pageIdx = prop.imageData.indexOf(item)
+                    let currentContent = contentData[pageIdx];
+                    let currentButtonContent = buttonData[pageIdx];
+
+                    return <OnboardingImage image={item} content={currentContent} buttonProps={{
+                        label: currentButtonContent,
+                        index: pageIdx,
+                        onTap: () => {
+                            if (pageIdx < 2) {
+                                ref.current?.scrollToIndex({ animated: true, index: pageIdx + 1 })
+                            }
+                            else {
+                                prop.navigation.navigate("SignInScreen")
+                            }
+                        }
+                    }} />
+                }}
+                onScroll={prop.onScroll}
+                onMomentumScrollEnd={(e) => {
+                    const contentOffsetX = e.nativeEvent.contentOffset.x;
+                    const index = Math.floor(contentOffsetX / 300); // Adjust based on image size
+                    prop.setActiveIndex(index)
+                }}
+                keyExtractor={(item, index) => index.toString()}
+            />
+        </View >
+    )
+}/*  */
+
+
+type OnboardingButtonProp = {
+    label: string,
+    onTap: () => void,
+    index: number,
+}
+
+const OnboardingButton: React.FC<OnboardingButtonProp> = ({ label, onTap, index }) => {
+    return (
+        <TouchableOpacity onPress={onTap}>
+            <View style={{
+                width: width - 32,
+                height: 48,
+                justifyContent: 'center',
+                backgroundColor: '#FB8C00',
+                alignItems: 'center',
+                borderRadius: 24,
+                flexDirection: "row"
+            }}>
+                <Text style={{ fontSize: 18, fontFamily: fontFamilies.Roboto.bold }}>{label}</Text>
+                <View style={{ width: 5 }} />
+                {index > 0 ? <Image source={require("../../../assets/ic_arrow_right.png")
+                } style={{
+                    height: 15, width: 20
+                }} /> : <View />}
+
+            </View>
+        </TouchableOpacity>
+    )
+}
+
+type OnBoardingImageProp = {
+    image: ImageSourcePropType
+    content: ContentData
+    buttonProps: OnboardingButtonProp
+}
+const OnboardingImage: React.FC<OnBoardingImageProp> = ({ image, content, buttonProps }) => {
+    return <View style={{
+        flex: 1,
+        width: width,
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        padding: 0
+    }}>
+        <View
+            style={{
+                flexDirection: 'column',
+                alignItems: 'center',
+                position: 'relative'
+            }}>
+            <Text style={{ fontSize: 40, fontFamily: fontFamilies.Roboto.bold }}>
+                {content.title}
+            </Text>
+            <Text style={{ fontSize: 24, fontFamily: fontFamilies.Roboto.bold }}>
+                {content.content}
+            </Text>
+            <View style={{ height: 15 }}></View>
+            <Image
+                source={image}
+                style={{
+                    width: width,
+                    height: height * (614 / 852)
+                }}
+                resizeMode='cover'
+            />
+            <View style={{
+                width: width,
+                position: 'absolute',
+                alignItems: 'center',
+                bottom: (42 / 852) * height,
+
+                right: 0, left: 0
+            }}>
+                <OnboardingButton label={buttonProps.label} onTap={buttonProps.onTap} index={buttonProps.index} />
+            </View>
+        </View>
+    </View >
+}
+
+
+
+const styles = StyleSheet.create({
+    stackLayer: {
+        flex: 1,
+        width: width,
+        height: height,
+        backgroundColor: "#FB8C00",
+        justifyContent: 'flex-end',
+        flexDirection: "column",
+
+    },
+    indicatorContainer: {
+        flexDirection: 'row',
+        width: width,
+        justifyContent: 'center',
+    },
+    dot: {
+        width: 10,
+        height: 10,
+        borderRadius: 5,
+        margin: 5,
+    },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 50,
+    }
+})
+
+
+export default OnboardingScreen;
