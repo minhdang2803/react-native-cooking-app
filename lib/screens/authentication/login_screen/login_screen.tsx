@@ -30,7 +30,7 @@ const SignUpScreen: React.FC<NavigationProp> = ({ navigation }) => {
                 <PrimaryTitle />
                 <View style={{ height: 4 }} />
                 <SecondaryTitle />
-                <View style={{ height: 16 }} />
+                <View style={{ height: 16 }}  />
                 <CustomTextField
                     prefixTitle='Email'
                     suffixTitle='Sign in with Email'
