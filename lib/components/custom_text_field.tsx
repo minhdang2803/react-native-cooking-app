@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { fontFamilies } from '../font';
+import { fontFamilies } from '../utils/font';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { colorResource } from '../utils/color_resource';
 
@@ -13,6 +13,7 @@ type TextFieldWithPreSurfTitleProps = {
     placeHolder: string,
     textController: React.RefObject<TextInput>
     isPassword: boolean
+    onChangeText?: ((text: string) => void) | undefined
 }
 const CustomTextField: React.FC<TextFieldWithPreSurfTitleProps> = (prop) => {
     const [text, setText] = useState('');
@@ -39,14 +40,17 @@ const CustomTextField: React.FC<TextFieldWithPreSurfTitleProps> = (prop) => {
                     style={innerStyles.textInput}
                     placeholder={prop.placeHolder}
                     ref={prop.textController}
-                    onChangeText={setText}
+                    onChangeText={(text: string) => {
+                        setText(text)
+                        prop.onChangeText?.(text)
+                    }}
                     value={text}
-                    secureTextEntry={prop.isPassword ? !isPasswordHidden : false} // 
+                    secureTextEntry={prop.isPassword ? isPasswordHidden : false} // 
                     placeholderTextColor={colorResource.textSecondary}
                 />
                 {prop.isPassword ? <TouchableOpacity onPress={togglePasswordVisibility} style={innerStyles.clearButton}>
                     <Icon
-                        name={isPasswordHidden ? 'visibility-off' : 'visibility'}
+                        name={isPasswordHidden ? 'visibility' : 'visibility-off'}
                         size={20}
                         color={colorResource.textSecondary}
                     />

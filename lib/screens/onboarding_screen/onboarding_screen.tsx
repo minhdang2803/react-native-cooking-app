@@ -1,8 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Dimensions, Image, StyleSheet, View, Text, ImageSourcePropType, FlatList, Animated, Pressable, TouchableOpacity } from 'react-native';
-import { fontFamilies } from '../../font';
-import { transformer } from '../../../metro.config';
-import { onboardingScreenViewModel } from '../../view_models/onboarding_screen/onboarding_screen_view_model';
+import { fontFamilies } from '../../utils/font';
+import { OnboardingScreenViewModel } from '../../view_models/onboarding_screen/onboarding_screen_view_model';
 
 const { width, height } = Dimensions.get("window")
 
@@ -10,11 +9,7 @@ type OnboardingProps = {
     navigation: any
 }
 
-const data: ImageSourcePropType[] = [
-    require("../../../assets/onboarding_first.png"),
-    require("../../../assets/onboarding_second.png"),
-    require("../../../assets/onboarding_third.png")
-]
+
 
 const buttonData: string[] = [
     "Let's Go",
@@ -37,9 +32,8 @@ const contentData: ContentData[] = [
 
 
 const OnboardingScreen: React.FC<OnboardingProps> = ({ navigation }) => {
+    const onboardingScreenViewModel = OnboardingScreenViewModel()
 
-
-    const [pageIndex, setIndex] = useState(0)
 
     // const [activeIndex, setActiveIndex] = useState(0);
     const scrollX = new Animated.Value(0);
@@ -67,8 +61,8 @@ const OnboardingScreen: React.FC<OnboardingProps> = ({ navigation }) => {
     const RenderDots = () => {
         return (
             <View style={styles.indicatorContainer}>
-                {data.map((_, index) => {
-                    const dotStyle = index === pageIndex
+                {onboardingScreenViewModel.imageData.map((_, index) => {
+                    const dotStyle = index === onboardingScreenViewModel.state.pageIndex
                         ? { ...styles.dot, backgroundColor: 'white', width: 20 }
                         : { ...styles.dot, backgroundColor: '#FEE8CC' };
                     return <View key={index} style={dotStyle} />
@@ -82,9 +76,8 @@ const OnboardingScreen: React.FC<OnboardingProps> = ({ navigation }) => {
         <View style={styles.stackLayer}>
             <RenderDots />
             <View style={{ height: 16 }} />
-            <OnboardingPageView imageData={data}
+            <OnboardingPageView
                 onScroll={onScroll}
-                setActiveIndex={setIndex}
                 navigation={navigation}
             />
         </View >
@@ -92,45 +85,36 @@ const OnboardingScreen: React.FC<OnboardingProps> = ({ navigation }) => {
 }
 
 type ImagePageViewProp = {
-    imageData: ImageSourcePropType[]
     onScroll: (...args: any[]) => void
-    setActiveIndex: (index: number) => void
     navigation: any
 }
 
 const OnboardingPageView: React.FC<ImagePageViewProp> = (prop) => {
+    const onboardingScreenViewModel = OnboardingScreenViewModel()
     const ref = useRef<FlatList>(null)
     return (
         <View>
             <FlatList
-                data={prop.imageData}
+                data={onboardingScreenViewModel.imageData}
                 horizontal
                 pagingEnabled
                 ref={ref}
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item }) => {
-                    let pageIdx = prop.imageData.indexOf(item)
+                    let pageIdx = onboardingScreenViewModel.imageData.indexOf(item)
                     let currentContent = contentData[pageIdx];
                     let currentButtonContent = buttonData[pageIdx];
-
                     return <OnboardingImage image={item} content={currentContent} buttonProps={{
                         label: currentButtonContent,
                         index: pageIdx,
-                        onTap: () => {
-                            if (pageIdx < 2) {
-                                ref.current?.scrollToIndex({ animated: true, index: pageIdx + 1 })
-                            }
-                            else {
-                                prop.navigation.navigate("SignInScreen")
-                            }
-                        }
+                        onTap: () => { onboardingScreenViewModel.onTapNext(pageIdx, ref, prop.navigation) }
                     }} />
                 }}
                 onScroll={prop.onScroll}
                 onMomentumScrollEnd={(e) => {
                     const contentOffsetX = e.nativeEvent.contentOffset.x;
                     const index = Math.floor(contentOffsetX / 300); // Adjust based on image size
-                    prop.setActiveIndex(index)
+                    onboardingScreenViewModel.onSetIndex(index)
                 }}
                 keyExtractor={(item, index) => index.toString()}
             />
@@ -144,7 +128,6 @@ type OnboardingButtonProp = {
     onTap: () => void,
     index: number,
 }
-
 const OnboardingButton: React.FC<OnboardingButtonProp> = ({ label, onTap, index }) => {
     return (
         <TouchableOpacity onPress={onTap}>

@@ -1,23 +1,31 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Dimensions, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { fontFamilies } from '../../../font';
-import CustomTextField from '../../../components/custom_text_field';
-import CustomCheckboxWithTitle from '../../../components/custom_checkbox_with_title';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { fontFamilies } from '../../../utils/font';
 import { colorResource } from '../../../utils/color_resource';
 import CustomButtom from '../../../components/custom_buttom';
+import CustomTextField from '../../../components/custom_text_field';
+import CustomCheckboxWithTitle from '../../../components/custom_checkbox_with_title';
 
 
 
-const { width, height } = Dimensions.get('window')
+
+const { width, height } = Dimensions.get("window")
+
 type NavigationProp = {
     navigation: any
 }
-const SignInScreen: React.FC<NavigationProp> = ({ navigation }) => {
+
+
+const SignUpScreen: React.FC<NavigationProp> = ({ navigation }) => {
     const textController = useRef<TextInput>(null)
+
+
     return (
-        <SafeAreaView style={styles.safeAreaStyle}>
-            <View style={styles.backgroundLayerStyle}>
+        <SafeAreaView style={styles.safeArea}>
+            <View style={styles.backgroundLayer} >
                 <View style={{ height: height * (131 / 852) }} />
                 <PrimaryTitle />
                 <View style={{ height: 4 }} />
@@ -32,6 +40,14 @@ const SignInScreen: React.FC<NavigationProp> = ({ navigation }) => {
                 />
                 <View style={{ height: 12 }} />
                 <CustomTextField
+                    prefixTitle='Phone'
+                    suffixTitle='Sign in with phone number'
+                    placeHolder='Enter your phone'
+                    textController={textController}
+                    isPassword={false}
+                />
+                <View style={{ height: 12 }} />
+                <CustomTextField
                     prefixTitle='Password'
                     suffixTitle=''
                     placeHolder='Enter your password'
@@ -39,33 +55,31 @@ const SignInScreen: React.FC<NavigationProp> = ({ navigation }) => {
                     isPassword={true}
                 />
                 <View style={{ height: 16 }} />
-                <OptionsBar onPressCheckBox={(isChecked: boolean) => { }} onPressForgotPassword={() => { }} />
+                <CustomCheckboxWithTitle title='Remember Me' onPress={(isChecked: boolean) => { }} />
                 <View style={{ height: 24 }} />
-                <CustomButtom title={"Sign In"} />
+                <CustomButtom title={"Sign Up"} />
                 <View style={{ height: 12 }} />
                 <OrDivider />
                 <View style={{ height: 12 }} />
                 <CustomButtom
-                    title={"Sign In With Google"}
+                    title={"Sign Up With Google"}
                     isPrefixIcon={true}
                     prefixIcon={require("../../../../assets/ic_google.png")}
                     backgroundColor={colorResource.surface1}
                 />
                 <View style={{ height: 16 }} />
                 <CustomButtom
-                    title={"Sign In With Apple"}
+                    title={"Sign Up With Apple"}
                     isPrefixIcon={true}
                     prefixIcon={require("../../../../assets/ic_apple.png")}
                     backgroundColor={colorResource.surface1}
                 />
-                <View style={{ flex: 1 }} />
-                <FooterText onPress={() => { navigation.navigate('SignUpScreen') }} />
-                <View style={{ height: 50 }} />
+                <View style={{ height: 95 }} />
+                <FooterText onPress={() => { navigation.navigate('SignInScreen') }} />
             </View>
         </SafeAreaView>
     );
 }
-
 
 const PrimaryTitle = () => {
     return (
@@ -76,7 +90,7 @@ const PrimaryTitle = () => {
                 color: "#131313",
                 fontSize: 24,
             }}>
-                Hi, Welcome Back! 👋
+                Create an account
             </Text>
         </View>
     )
@@ -91,36 +105,13 @@ const SecondaryTitle = () => {
                 color: "#131313",
                 fontSize: 14,
             }}>
-                Hello again, you’ve been missed!
+                Start cooking like a chief right now
             </Text>
         </View>
     )
 }
 
-type OptionsBarProps = {
-    onPressCheckBox: (isChecked: boolean) => void,
-    onPressForgotPassword: () => void,
-}
-const OptionsBar: React.FC<OptionsBarProps> = (props) => {
-    return (
 
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-            <CustomCheckboxWithTitle title='Remember Me' onPress={props.onPressCheckBox} />
-            <TouchableOpacity onPress={props.onPressForgotPassword}>
-                <Text style={{
-                    color: colorResource.primary,
-                    fontSize: 16,
-                    fontWeight: "500",
-                    fontFamily: fontFamilies.Roboto.medium
-                }}>
-                    Forgot Password
-                </Text>
-            </TouchableOpacity>
-        </View>
-
-
-    )
-}
 const OrDivider = () => {
     return (
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -149,25 +140,22 @@ const FooterText: React.FC<FooterTextProp> = (prop) => {
                         fontSize: 14,
                         fontFamily: fontFamilies.Roboto.medium,
                     }}
-                >Don’t have an account ? Sign Up</Text>
+                >Already have an account? Sign in</Text>
             </View>
         </TouchableOpacity>
     )
 }
-
 const styles = StyleSheet.create({
-    safeAreaStyle: {
+    safeArea: {
         flex: 1,
         width: width,
         height: height,
-        backgroundColor: 'white',
-
+        flexDirection: 'column',
+        backgroundColor: "white"
     },
-    backgroundLayerStyle: {
+    backgroundLayer: {
         marginHorizontal: 24,
-        flex: 1,
-        flexDirection: 'column'
     }
 })
 
-export default SignInScreen;
+export default SignUpScreen;

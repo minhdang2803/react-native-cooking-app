@@ -1,85 +1,81 @@
-import React, { useRef, useState } from 'react';
+
+
+
+
+import React, { useRef } from 'react';
 import { Dimensions, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import { fontFamilies } from '../../../font';
-import { colorResource } from '../../../utils/color_resource';
-import CustomButtom from '../../../components/custom_buttom';
+import { fontFamilies } from '../../../utils/font';
 import CustomTextField from '../../../components/custom_text_field';
 import CustomCheckboxWithTitle from '../../../components/custom_checkbox_with_title';
+import { colorResource } from '../../../utils/color_resource';
+import CustomButtom from '../../../components/custom_buttom';
+import { SignInViewModel } from '../../../view_models/sign_in_screen_view_model/sign_in_view_model';
 
 
 
-
-const { width, height } = Dimensions.get("window")
-
+const { width, height } = Dimensions.get('window')
 type NavigationProp = {
     navigation: any
 }
-
-
-const SignUpScreen: React.FC<NavigationProp> = ({ navigation }) => {
-    const textController = useRef<TextInput>(null)
-
-
+const SignInScreen: React.FC<NavigationProp> = ({ navigation }) => {
+    const signInViewModel = SignInViewModel()
     return (
-        <SafeAreaView style={styles.safeArea}>
-            <View style={styles.backgroundLayer} >
+        <SafeAreaView style={styles.safeAreaStyle}>
+            <View style={styles.backgroundLayerStyle}>
                 <View style={{ height: height * (131 / 852) }} />
                 <PrimaryTitle />
                 <View style={{ height: 4 }} />
                 <SecondaryTitle />
-                <View style={{ height: 16 }}  />
+                <View style={{ height: 16 }} />
                 <CustomTextField
                     prefixTitle='Email'
                     suffixTitle='Sign in with Email'
                     placeHolder='example@gmail.com'
-                    textController={textController}
+                    textController={signInViewModel.emailRef}
+                    onChangeText={signInViewModel.state.onSetEmail}
                     isPassword={false}
-                />
-                <View style={{ height: 12 }} />
-                <CustomTextField
-                    prefixTitle='Phone'
-                    suffixTitle='Sign in with phone number'
-                    placeHolder='Enter your phone'
-                    textController={textController}
-                    isPassword={false}
+
                 />
                 <View style={{ height: 12 }} />
                 <CustomTextField
                     prefixTitle='Password'
                     suffixTitle=''
                     placeHolder='Enter your password'
-                    textController={textController}
+                    textController={signInViewModel.passwordRef}
+                    onChangeText={signInViewModel.state.onSetPassword}
                     isPassword={true}
                 />
                 <View style={{ height: 16 }} />
-                <CustomCheckboxWithTitle title='Remember Me' onPress={(isChecked: boolean) => { }} />
+                <OptionsBar onPressCheckBox={signInViewModel.state.onSetIsRememberMe} onPressForgotPassword={() => { }} />
                 <View style={{ height: 24 }} />
-                <CustomButtom title={"Sign Up"} />
+                <CustomButtom title={"Sign In"} onPress={signInViewModel.onTapSignInWithEmailPassword} />
                 <View style={{ height: 12 }} />
                 <OrDivider />
                 <View style={{ height: 12 }} />
                 <CustomButtom
-                    title={"Sign Up With Google"}
+                    title={"Sign In With Google"}
                     isPrefixIcon={true}
                     prefixIcon={require("../../../../assets/ic_google.png")}
                     backgroundColor={colorResource.surface1}
+                    onPress={() => {}}
                 />
                 <View style={{ height: 16 }} />
                 <CustomButtom
-                    title={"Sign Up With Apple"}
+                    title={"Sign In With Apple"}
                     isPrefixIcon={true}
                     prefixIcon={require("../../../../assets/ic_apple.png")}
                     backgroundColor={colorResource.surface1}
+                    onPress={() => { }}
                 />
-                <View style={{ height: 95 }} />
-                <FooterText onPress={() => { navigation.navigate('SignInScreen') }} />
+                <View style={{ flex: 1 }} />
+                <FooterText onPress={() => { navigation.navigate('SignUpScreen') }} />
+                <View style={{ height: 50 }} />
             </View>
         </SafeAreaView>
     );
 }
+
 
 const PrimaryTitle = () => {
     return (
@@ -90,7 +86,7 @@ const PrimaryTitle = () => {
                 color: "#131313",
                 fontSize: 24,
             }}>
-                Create an account
+                Hi, Welcome Back! 👋
             </Text>
         </View>
     )
@@ -105,13 +101,36 @@ const SecondaryTitle = () => {
                 color: "#131313",
                 fontSize: 14,
             }}>
-                Start cooking like a chief right now
+                Hello again, you’ve been missed!
             </Text>
         </View>
     )
 }
 
+type OptionsBarProps = {
+    onPressCheckBox: (isChecked: boolean) => void,
+    onPressForgotPassword: () => void,
+}
+const OptionsBar: React.FC<OptionsBarProps> = (props) => {
+    return (
 
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+            <CustomCheckboxWithTitle title='Remember Me' onPress={props.onPressCheckBox} />
+            <TouchableOpacity onPress={props.onPressForgotPassword}>
+                <Text style={{
+                    color: colorResource.primary,
+                    fontSize: 16,
+                    fontWeight: "500",
+                    fontFamily: fontFamilies.Roboto.medium
+                }}>
+                    Forgot Password
+                </Text>
+            </TouchableOpacity>
+        </View>
+
+
+    )
+}
 const OrDivider = () => {
     return (
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -140,22 +159,25 @@ const FooterText: React.FC<FooterTextProp> = (prop) => {
                         fontSize: 14,
                         fontFamily: fontFamilies.Roboto.medium,
                     }}
-                >Already have an account? Sign in</Text>
+                >Don’t have an account ? Sign Up</Text>
             </View>
         </TouchableOpacity>
     )
 }
+
 const styles = StyleSheet.create({
-    safeArea: {
+    safeAreaStyle: {
         flex: 1,
         width: width,
         height: height,
-        flexDirection: 'column',
-        backgroundColor: "white"
+        backgroundColor: 'white',
+
     },
-    backgroundLayer: {
+    backgroundLayerStyle: {
         marginHorizontal: 24,
+        flex: 1,
+        flexDirection: 'column'
     }
 })
 
-export default SignUpScreen;
+export default SignInScreen;

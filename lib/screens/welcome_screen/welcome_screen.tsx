@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, Image, Dimensions, Button, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { fontFamilies } from '../../font';
+import { fontFamilies } from '../../utils/font';
 
 
 const windowWidth = Dimensions.get('window')

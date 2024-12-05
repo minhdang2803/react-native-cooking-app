@@ -1,7 +1,7 @@
 import React from 'react';
 import { DimensionValue, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { colorResource } from '../utils/color_resource';
-import { fontFamilies } from '../font';
+import { fontFamilies } from '../utils/font';
 
 type CustomButtomProp = {
     title: string

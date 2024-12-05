@@ -22,7 +22,7 @@ const CustomCheckboxWithTitle: React.FC<CheckBoxTitleProps> = (props) => {
         <View style={innerStyles.container}>
             <BouncyCheckbox onPress={(isChecked: boolean) => {
                 setChecked(isChecked)
-                props.onPress?.(checked)
+                props.onPress?.(isChecked)
             }}
                 fillColor={colorResource.primary}
                 unFillColor="#FFFFFF"
