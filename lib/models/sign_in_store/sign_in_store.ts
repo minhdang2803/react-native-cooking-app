@@ -2,19 +2,40 @@ import { create } from "zustand";
 interface SignInViewState{
     email: string,
     password: string,
-    isRememberMe: boolean
-    onTapSignIn: ( email: string,
-    password: string,
-        isRememberMe: boolean) => void
+    isRememberMe: boolean,
+    isLoading: boolean
+    isLoadingGoogle: boolean,
+    isLoadingApple:boolean,
+    setLoading: (isLoading :boolean)=>void,
+    setLoadingGoogle: (isLoading :boolean)=>void,
+    setLoadingApple: (isLoading :boolean)=>void,
+    onTapSignIn: (
+        email: string,
+        password: string,
+        isRememberMe: boolean,
+    ) => void,
     onSetPassword: (password: string)=>void,
-onSetEmail: (email: string)=>void,
-onSetIsRememberMe: (isRememberMe: boolean)=>void,
+    onSetEmail: (email: string)=>void,
+    onSetIsRememberMe: (isRememberMe: boolean) => void,
+    onResetState: () => void,
 }
 
-const useSignInViewStore = create<SignInViewState>((set) => ({
+export const useSignInViewStore = create<SignInViewState>((set) => ({
     email: '',
     password: '',
     isRememberMe: false,
+    isLoading: false,
+    isLoadingApple: false,
+    isLoadingGoogle:false,
+    setLoading: (isLoading: boolean) => {
+        set((state)=>({isLoading : isLoading}))
+    },
+    setLoadingGoogle: (isLoading: boolean) => {
+        set((state)=>({isLoadingGoogle : isLoading}))
+    },
+    setLoadingApple: (isLoading: boolean) => {
+        set((state)=>({isLoadingApple : isLoading}))
+    },
     onSetPassword: (password: string) => {
         set((state) => ({password:password}))
     },
@@ -30,9 +51,8 @@ const useSignInViewStore = create<SignInViewState>((set) => ({
             password: password,
             isRememberMe: isRememberMe,
         }))
-    } 
+    },
+    onResetState: () => {
+        set((state) => ({ email:'', password:'', isRememberMe:false}))
+    }
 }))
-
-
-
-export default useSignInViewStore

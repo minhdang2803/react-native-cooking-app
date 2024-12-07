@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "550577068792",
+    "project_id": "react-native-cooking",
+    "storage_bucket": "react-native-cooking.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:550577068792:android:b36101f4d315989345b90d",
+        "android_client_info": {
+          "package_name": "com.cooking"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "550577068792-kekas5kojmn25m3kaqi3uh2dh8gr5daa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cooking",
+            "certificate_hash": "c4be67e47d3b39e651ad94baba3fbda75d930ef3"
+          }
+        },
+        {
+          "client_id": "550577068792-k594cgdafqofkc9ruaosdn3ii63hce64.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYS8sHtiStILvjfJVlEMUt_-CIZVihDko"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "550577068792-k594cgdafqofkc9ruaosdn3ii63hce64.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "550577068792-6dq8lbe5mpqs09h66di1207ljgjdag0f.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.cooking"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

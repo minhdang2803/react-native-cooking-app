@@ -12,12 +12,9 @@ type WelcomeProps = {
 };
 const WelcomeScreen: React.FC<WelcomeProps> = ({ navigation }) => {
     return (
-        <SafeAreaView>
-            <View style={styles.container}>
-                <StackView navigation={navigation} />
-            </View>
-        </SafeAreaView>
-
+        <View style={styles.container}>
+            <StackView navigation={navigation} />
+        </View>
     );
 }
 

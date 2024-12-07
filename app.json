@@ -1,4 +1,38 @@
 {
-  "name": "cooking",
-  "displayName": "cooking"
+  "expo": {
+    "android": {
+      "googleServicesFile": "./assets/jsons/google-services.json",
+      "package": "com.cooking"
+    },
+    "ios": {
+      "googleServicesFile": "./assets/jsons/GoogleService-Info.plist",
+      "bundleIdentifier": "com.cooking"
+    },
+    "plugins": [
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth",
+      "@react-native-firebase/crashlytics",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ],
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/Roboto-Black.ttf",
+            "./assets/fonts/Roboto-Bold.ttf",
+            "./assets/fonts/Roboto-Light.ttf",
+            "./assets/fonts/Roboto-Medium.ttf",
+            "./assets/fonts/Roboto-Regular.ttf",
+            "./assets/fonts/Roboto-Thin.ttf"
+          ]
+        }
+      ]
+    ]
+  }
 }

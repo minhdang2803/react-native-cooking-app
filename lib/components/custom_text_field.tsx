@@ -13,10 +13,11 @@ type TextFieldWithPreSurfTitleProps = {
     placeHolder: string,
     textController: React.RefObject<TextInput>
     isPassword: boolean
+    textValue?: string
     onChangeText?: ((text: string) => void) | undefined
 }
 const CustomTextField: React.FC<TextFieldWithPreSurfTitleProps> = (prop) => {
-    const [text, setText] = useState('');
+    const [text, setText] = useState(prop.textValue ?? "");
     const clearText = () => {
         setText('');
     }
@@ -24,6 +25,8 @@ const CustomTextField: React.FC<TextFieldWithPreSurfTitleProps> = (prop) => {
     const togglePasswordVisibility = () => {
         setIsPasswordHidden(!isPasswordHidden);
     };
+
+
     return (
         <View style={{ flexDirection: 'column' }}>
             <View style={{

@@ -2,7 +2,7 @@
 
 
 
-import React, { useRef } from 'react';
+import React, { useEffect } from 'react';
 import { Dimensions, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { fontFamilies } from '../../../utils/font';
@@ -20,6 +20,13 @@ type NavigationProp = {
 }
 const SignInScreen: React.FC<NavigationProp> = ({ navigation }) => {
     const signInViewModel = SignInViewModel()
+    useEffect(() => {
+        signInViewModel.initState()
+        return () => {
+            signInViewModel.dispose()
+        };
+    }, []);
+
     return (
         <SafeAreaView style={styles.safeAreaStyle}>
             <View style={styles.backgroundLayerStyle}>
@@ -33,23 +40,31 @@ const SignInScreen: React.FC<NavigationProp> = ({ navigation }) => {
                     suffixTitle='Sign in with Email'
                     placeHolder='example@gmail.com'
                     textController={signInViewModel.emailRef}
-                    onChangeText={signInViewModel.state.onSetEmail}
+                    textValue={signInViewModel.email}
+                    onChangeText={signInViewModel.onSetEmail}
                     isPassword={false}
 
                 />
                 <View style={{ height: 12 }} />
                 <CustomTextField
+                    textValue={signInViewModel.password}
                     prefixTitle='Password'
                     suffixTitle=''
                     placeHolder='Enter your password'
                     textController={signInViewModel.passwordRef}
-                    onChangeText={signInViewModel.state.onSetPassword}
+                    onChangeText={signInViewModel.onSetPassword}
                     isPassword={true}
                 />
                 <View style={{ height: 16 }} />
-                <OptionsBar onPressCheckBox={signInViewModel.state.onSetIsRememberMe} onPressForgotPassword={() => { }} />
+                <OptionsBar onPressCheckBox={signInViewModel.onSetIsRememberMe} onPressForgotPassword={() => { }} />
                 <View style={{ height: 24 }} />
-                <CustomButtom title={"Sign In"} onPress={signInViewModel.onTapSignInWithEmailPassword} />
+                <CustomButtom title={"Sign In"}
+                    onPress={
+                        () => {
+                            signInViewModel.onTapSignInWithEmailPassword(navigation)
+                        }}
+                    isLoading={signInViewModel.isLoading}
+                />
                 <View style={{ height: 12 }} />
                 <OrDivider />
                 <View style={{ height: 12 }} />
@@ -58,7 +73,10 @@ const SignInScreen: React.FC<NavigationProp> = ({ navigation }) => {
                     isPrefixIcon={true}
                     prefixIcon={require("../../../../assets/ic_google.png")}
                     backgroundColor={colorResource.surface1}
-                    onPress={() => {}}
+                    isLoading={signInViewModel.isLoadingGoogle}
+                    onPress={() => { signInViewModel.onTapSignInWithGoogle(navigation) }}
+
+
                 />
                 <View style={{ height: 16 }} />
                 <CustomButtom
