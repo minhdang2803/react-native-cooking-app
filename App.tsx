@@ -16,6 +16,7 @@ import { routesName } from './lib/screens/routes';
 import { singletonAuthViewModel } from './lib/view_models/authentication/firebase_configuration';
 import HomeScreen from './lib/screens/hone_screen/home_screen';
 import { View } from 'react-native';
+import PreferenceScreen from './lib/screens/preference_screen/preference_screen';
 
 
 
@@ -38,13 +39,14 @@ function App(): React.JSX.Element {
   return (
     <NavigationContainer >
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={
-        isReady ? routesName.homeScreen : routesName.onboardingScreen
+        isReady ? routesName.preferenceScreen : routesName.onboardingScreen
       }>
         <Stack.Screen name={routesName.onboardingScreen} component={OnboardingScreen} />
         <Stack.Screen name={routesName.welcomeScreen} component={WelcomeScreen} />
-        <Stack.Screen name={routesName.SignUpScreen} component={SignUpScreen} />
+        <Stack.Screen name={routesName.signUpScreen} component={SignUpScreen} />
         <Stack.Screen name={routesName.signInScreen} component={SignInScreen} />
         <Stack.Screen name={routesName.homeScreen} component={HomeScreen} />
+        <Stack.Screen name={routesName.preferenceScreen} component={PreferenceScreen} />
       </Stack.Navigator>
     </NavigationContainer >
   );

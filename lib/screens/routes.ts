@@ -1,7 +1,8 @@
 export const routesName = {
     onboardingScreen: "OnboardingScreen",
     welcomeScreen: "WelcomeScreen",
-    SignUpScreen: "SignUpScreen",
+    signUpScreen: "SignUpScreen",
     signInScreen: "SignInScreen",
-    homeScreen:"HomeScreen"
+    homeScreen: "HomeScreen",
+    preferenceScreen:"PreferenceScreen"
 }
