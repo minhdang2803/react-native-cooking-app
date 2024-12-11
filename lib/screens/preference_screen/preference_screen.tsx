@@ -3,7 +3,7 @@ import { Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View }
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { fontFamilies } from '../../utils/font';
 import { colorResource } from '../../utils/color_resource';
-import { preferenceItems, PreferencesItemModel } from "../../models/preferences_screen/preference_item_model"
+import { preferenceItems, PreferencesItemModel } from "../../models/preferences_screen_store/preference_item_model"
 import CustomButtom from '../../components/custom_buttom';
 import { useNavigation } from '@react-navigation/native';
 import { routesName } from '../routes';
