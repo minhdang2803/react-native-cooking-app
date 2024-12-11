@@ -86,7 +86,6 @@ const HomeScreen: React.FC<HomeScreenProp> = ({ navigation }) => {
                     }
                     let icon = icons.get(iconName)
                     return <TabIconComponent color={color} iconUrl={icon} />
-
                 },
                 tabBarLabelStyle: {
                     marginTop: 4,

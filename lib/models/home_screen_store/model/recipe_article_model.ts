@@ -6,5 +6,6 @@ export interface RecipeArticle {
     isFavorite: boolean
     isSaved: boolean,
     author: AuthorModel
+    description?: string
 
 }

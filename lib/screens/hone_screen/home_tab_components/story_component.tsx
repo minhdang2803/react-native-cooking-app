@@ -13,14 +13,16 @@ const StoryComponent: React.FC<StoryComponentProp> = (prop) => {
         <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}>
-            <View style={{ width: 16 }}></View>
-            <View style={{
-                backgroundColor: colorResource.primary,
-                borderRadius: 360, width: 84, height: 84,
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginRight: 12,
-            }}>
+            <View key={"Spacer1"} style={{ width: 16 }} />
+            <View
+                key={"add function"}
+                style={{
+                    backgroundColor: colorResource.primary,
+                    borderRadius: 360, width: 84, height: 84,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginRight: 12,
+                }}>
                 <View style={{
                     backgroundColor: "white", opacity: 0.15, borderRadius: 360,
                     position: 'absolute', left: 20, right: 20, bottom: 20, top: 20,
@@ -34,15 +36,17 @@ const StoryComponent: React.FC<StoryComponentProp> = (prop) => {
                     }}>
                 </Icon>
             </View>
-            {prop.user.map((item) => {
-                let index = prop.user.indexOf(item)
-                return (<View style={{
-                    borderRadius: 360,
-                    padding: 4,
-                    borderColor: colorResource.primary,
-                    borderWidth: 1,
-                    marginRight: index != prop.user.length - 1 ? 12 : null
-                }}>
+            {prop.user.map((item, index) => {
+                
+                return (<View
+                    key={`story_${index}`}
+                    style={{
+                        borderRadius: 360,
+                        padding: 4,
+                        borderColor: colorResource.primary,
+                        borderWidth: 1,
+                        marginRight: index != prop.user.length - 1 ? 12 : null
+                    }}>
                     <Image
                         source={item.imageUrl}
                         style={{
