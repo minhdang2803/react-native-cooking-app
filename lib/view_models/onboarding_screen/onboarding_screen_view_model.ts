@@ -8,7 +8,13 @@ export const OnboardingScreenViewModel = () => {
     require("../../../assets/onboarding_first.png"),
     require("../../../assets/onboarding_second.png"),
     require("../../../assets/onboarding_third.png")
-]
+    ]
+    const buttonData: string[] = [
+    "Let's Go",
+    "Next",
+    "Next",
+    ]
+    
     const state = useOnboardingScreenStore((state) => state)
     const onTapNext = (index: number,ref:React.RefObject<FlatList<any>>, navigation: any) => {
         if (index < 2) {
@@ -23,6 +29,6 @@ export const OnboardingScreenViewModel = () => {
     const onSetIndex = (index: number) => {
         state.onSetIndex(index);
     }
-    return{state, onTapNext, onSetIndex, imageData}
+    return{state, onTapNext, onSetIndex, imageData, buttonData}
 }
 

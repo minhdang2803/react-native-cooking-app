@@ -117,7 +117,7 @@ const PreferenceScreen: React.FC<PreferenceScreenProp> = ({ navigation }) => {
 
     const PreferencesGridViewComponent = () => {
         return (
-            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+            <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
                 <FlatList
                     data={preferenceItems}
                     scrollEnabled={true}

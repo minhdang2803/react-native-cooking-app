@@ -8,8 +8,8 @@ import { colorResource } from '../../../utils/color_resource';
 
 type SectionTitleComponentProp = {
     title: string
-    actionTitle: string,
-    onPress: () => void
+    actionTitle?: string,
+    onPress?: () => void
 }
 const SectionTitleComponent: React.FC<SectionTitleComponentProp> = (prop) => {
     return (

@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Dimensions, Image, StyleSheet, View, Text, ImageSourcePropType, FlatList, Animated, Pressable, TouchableOpacity } from 'react-native';
 import { fontFamilies } from '../../utils/font';
 import { OnboardingScreenViewModel } from '../../view_models/onboarding_screen/onboarding_screen_view_model';
+import { colorResource } from '../../utils/color_resource';
 
 const { width, height } = Dimensions.get("window")
 
@@ -10,12 +11,6 @@ type OnboardingProps = {
 }
 
 
-
-const buttonData: string[] = [
-    "Let's Go",
-    "Next",
-    "Next",
-]
 
 type ContentData = {
     title: string,
@@ -36,21 +31,13 @@ const OnboardingScreen: React.FC<OnboardingProps> = ({ navigation }) => {
 
 
     // const [activeIndex, setActiveIndex] = useState(0);
-    const scrollX = new Animated.Value(0);
+    const scrollX = useRef(new Animated.Value(0)).current
 
     // Handle flatlist scroll
     const onScroll = Animated.event(
         [{ nativeEvent: { contentOffset: { x: scrollX } } }],
         { useNativeDriver: false }
     );
-
-    // Calculate page indicator position based on scroll position
-    const indicatorWidth = scrollX.interpolate({
-        inputRange: [0, 1],
-        outputRange: [0, 1], // Define the range here (if needed for custom size)
-        extrapolate: 'clamp',
-    });
-
 
     const wormIndicator = scrollX.interpolate({
         inputRange: [0, width, width * 2],
@@ -62,10 +49,10 @@ const OnboardingScreen: React.FC<OnboardingProps> = ({ navigation }) => {
         return (
             <View style={styles.indicatorContainer}>
                 {onboardingScreenViewModel.imageData.map((_, index) => {
-                    const dotStyle = index === onboardingScreenViewModel.state.pageIndex
-                        ? { ...styles.dot, backgroundColor: 'white', width: 20 }
-                        : { ...styles.dot, backgroundColor: '#FEE8CC' };
-                    return <View key={index} style={dotStyle} />
+                    const inputRange = [(index - 1) * width, index * width, (index + 1) * width]
+                    const dotWidth = scrollX.interpolate({ inputRange, outputRange: [10, 20, 10], extrapolate: 'clamp' })
+                    const opacity = scrollX.interpolate({ inputRange, outputRange: [0.3, 1, 0.3], extrapolate: 'clamp' })
+                    return <Animated.View key={index} style={[styles.dot, { width: dotWidth, opacity: opacity, backgroundColor: "#FEE8CC" }]} />
                 })}
             </View>
         );
@@ -103,7 +90,7 @@ const OnboardingPageView: React.FC<ImagePageViewProp> = (prop) => {
                 renderItem={({ item }) => {
                     let pageIdx = onboardingScreenViewModel.imageData.indexOf(item)
                     let currentContent = contentData[pageIdx];
-                    let currentButtonContent = buttonData[pageIdx];
+                    let currentButtonContent = onboardingScreenViewModel.buttonData[pageIdx];
                     return <OnboardingImage image={item} content={currentContent} buttonProps={{
                         label: currentButtonContent,
                         index: pageIdx,
@@ -218,7 +205,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     dot: {
-        width: 10,
+
         height: 10,
         borderRadius: 5,
         margin: 5,

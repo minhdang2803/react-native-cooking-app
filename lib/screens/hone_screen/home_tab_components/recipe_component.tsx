@@ -4,6 +4,7 @@ import { RecipeArticle } from '../../../models/home_screen_store/model/recipe_ar
 import { fontFamilies } from '../../../utils/font';
 import { fontResource } from '../../../utils/font_resource';
 import { colorResource } from '../../../utils/color_resource';
+import CustomButtom from '../../../components/custom_buttom';
 
 
 
@@ -11,7 +12,7 @@ import { colorResource } from '../../../utils/color_resource';
 type RecipeComponentProp = {
     recipeArticle: RecipeArticle,
     onPress: () => void,
-
+    onPressStartDiet?: () => void
 }
 
 const RecipeComponent: React.FC<RecipeComponentProp> = (prop) => {
@@ -39,12 +40,12 @@ const RecipeComponent: React.FC<RecipeComponentProp> = (prop) => {
                     }}
                 />
                 <View style={{ width: 4 }}></View>
-                <Text style={fontResource.labelMedium}>{prop.recipeArticle.author.name}</Text>
-                <View style={{ flex: 1 }}></View>
+                <Text style={[fontResource.labelMedium, { flex: 1 }]}>{prop.recipeArticle.author.name}</Text>
                 <TouchableOpacity onPress={() => { setLike(!isLiked) }}>
                     <Image
                         source={isLiked ? require("../../../../assets/ic_like.png") : require("../../../../assets/ic_like_active.png")}
                         style={{ height: 20, width: 20 }}
+                        resizeMode='contain'
                     />
                 </TouchableOpacity>
             </View>)
@@ -52,7 +53,7 @@ const RecipeComponent: React.FC<RecipeComponentProp> = (prop) => {
     const TitleComponent = () => {
         return (
             <View
-                style={{ flex: 1, marginHorizontal: 12, }}>
+                style={{ flex: 1, marginHorizontal: 12 }}>
                 <Text
                     numberOfLines={2} style={[fontResource.titleLarge, { textAlign: 'left' }]}>{prop.recipeArticle.title}</Text>
             </View>
@@ -103,7 +104,7 @@ const RecipeComponent: React.FC<RecipeComponentProp> = (prop) => {
     const DescriptionComponent = () => {
         return (
             prop.recipeArticle.description != null ?
-                <View style={{ marginHorizontal: 12, marginTop: 8 }}>
+                <View style={{ marginHorizontal: 12, marginTop: 8, justifyContent: 'flex-start' }}>
                     <Text
                         numberOfLines={3}
                         style={fontResource.bodyTextSmall}
@@ -115,20 +116,28 @@ const RecipeComponent: React.FC<RecipeComponentProp> = (prop) => {
         )
     }
 
+    const StartDietButtonComponent = () => {
+        if (prop.onPressStartDiet !== undefined) {
+            return (
+                <View style={{ marginBottom: 12, width: "100%", paddingHorizontal: 12 }}>
+                    <CustomButtom title={'Start a Diet'} />
+                </View>
+
+            )
+        } else {
+            return <View></View>
+        }
+    }
 
     return (
         <View style={{
             width: "100%",
-            // height: "100%",
             borderRadius: 20,
+            flexGrow: 1,
             backgroundColor: colorResource.border,
-            alignItems: 'flex-start',
             shadowOffset: { width: 0, height: 4 },
             shadowColor: "#000000",
             shadowOpacity: 0.25,
-            justifyContent: 'flex-start',
-            alignSelf: 'center',
-
         }}>
             <Image
                 source={prop.recipeArticle.imageUrl}
@@ -156,11 +165,11 @@ const RecipeComponent: React.FC<RecipeComponentProp> = (prop) => {
             <TagListComponent />
             <View style={{ height: 8 }}></View>
             <TitleComponent />
-
             <DescriptionComponent />
             <View style={{ height: 8 }}></View>
             <AuthorComponent />
             <View style={{ height: 12 }}></View>
+            <StartDietButtonComponent />
         </View>
     );
 }
